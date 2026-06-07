@@ -1,0 +1,23 @@
+# Environment config (contains API keys - DO NOT commit)
+.env
+
+# Compiled binary
+intimate-agent
+server
+
+# SQLite database
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Go build cache
+*.exe
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
