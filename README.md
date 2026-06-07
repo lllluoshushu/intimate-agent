@@ -14,7 +14,7 @@
 
 ### 1. 环境准备
 
-- Go 1.21+
+- Go 1.22+
 - LLM API Key（支持 OpenAI 兼容接口，推荐 Qwen）
 
 ### 2. 配置环境变量
@@ -57,7 +57,7 @@ go run cmd/server/main.go
 服务启动后会显示：
 ```
 Intimate Agent Runtime starting on :8080
-LLM Model: qwen-plus
+LLM Model: <your-model-name>
 Database: data/agent.db
 
 Endpoints:
@@ -131,6 +131,9 @@ intimate-agent/
 ├── data/                           # SQLite 数据库（运行时创建）
 ├── tests/
 │   └── agent_test.go               # 测试用例
+├── .env                            # 环境变量配置（本地，不提交）
+├── .env.example                    # 环境变量模板
+├── .gitignore                      # Git 忽略规则
 ├── go.mod
 └── go.sum
 ```
@@ -153,12 +156,14 @@ type UserProfile struct {
 type MemoryItem struct {
     ID           string
     UserID       string
-    Category     string  // "basic_info", "preference", "emotion", "event", "relationship_pref"
+    Category     string    // "basic_info", "preference", "emotion", "event", "relationship_pref"
     Key          string
     Value        string
-    Source       string  // 原始用户发言
+    Source       string    // 原始用户发言
     Confidence   float64
-    SupersededBy string  // 被哪条新记忆替代
+    CreatedAt    time.Time
+    UpdatedAt    time.Time
+    SupersededBy string    // 被哪条新记忆替代
     Active       bool
 }
 ```
@@ -169,6 +174,17 @@ type RelationshipState struct {
     Familiarity float64  // 0-100，熟悉度
     Trust       float64  // 0-100，信任度
     Intimacy    float64  // 0-100，亲密度
+}
+```
+
+### SessionState
+```go
+type SessionState struct {
+    SessionID    string
+    UserID       string
+    Messages     []Message
+    Relationship RelationshipState
+    TurnCount    int
 }
 ```
 
